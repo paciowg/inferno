@@ -38,3 +38,16 @@ test_sets:
           - ArgonautSmokingStatusSequence
           - ArgonautVitalSignsSequence
         run_all: true
+      - name: Additional Resources
+        overview: >
+          This is an overview of additional resources
+        sequences:
+          - DocumentReferenceSequence
+          - ProvenanceSequence
+        run_all: true
+      - name: Jake's First Test Set
+        overview: >
+          This is an overview of the Discovery group
+        sequences:
+          - FirstCustomSequence
+        run_all: true

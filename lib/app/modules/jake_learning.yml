@@ -1,0 +1,14 @@
+name: jake_learning
+description: This module is Jake's educational experiment
+fhir_version: dstu2
+default_test_set: jfts
+test_sets:
+  jfts:
+    view: default
+    tests: 
+      - name: Jake's First Test Set
+        overview: >
+          This is an overview of the Discovery group
+        sequences:
+          - FirstCustomSequence
+        run_all: true
