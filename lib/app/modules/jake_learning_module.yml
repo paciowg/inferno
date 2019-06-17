@@ -1,6 +1,7 @@
 name: jake_learning
+title: Jake Learning
 description: This module is Jake's educational experiment
-fhir_version: dstu2
+fhir_version: r4
 default_test_set: jfts
 test_sets:
   jfts:

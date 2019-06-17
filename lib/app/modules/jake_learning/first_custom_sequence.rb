@@ -7,7 +7,6 @@ module Inferno
         test_id_prefix 'JFCS'
   
         requires :url
-        defines :oauth_authorize_endpoint, :oauth_token_endpoint, :oauth_register_endpoint
   
         description 'This is the first test sequence Jake has written'
   
@@ -24,6 +23,23 @@ module Inferno
   
           assert true
   
+          warning {
+            assert false, "You've been warned!"
+          }
+        end
+
+        test 'Second test in the JFCS sequence' do
+          metadata {
+            id '02'
+            desc %(
+  
+             This is the second test of the sequence, and it just asserts false
+  
+            )
+          }
+
+          assert false
+
           warning {
             assert false, "You've been warned!"
           }
