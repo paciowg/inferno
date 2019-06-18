@@ -1,20 +1,19 @@
 module Inferno
     module Sequence
-        class ConnectionSequence < SequenceBase
+        class ValidConnectionSequence < SequenceBase
 
-            title 'DEL Server Connection Sequence'
-            description "Verify connection to the DEL FHIR Server is possible"
-            test_id_prefix 'InitialDEL'
+            title 'DEL Server Valid Connection Sequence'
+            description "Verify connection to the DEL FHIR Server exists"
+            test_id_prefix 'vcs'
 
             requires :url
-            defines :client
 
             test 'Valid URL' do
             
                 metadata{
                     id '01'
                     desc %(
-                        Tests that the provided URL is actually a url that could point to a FHIR server
+                        Tests that the provided URL is actually a url that could potentially point to a FHIR server
                     )
                 }
                 
@@ -38,6 +37,23 @@ module Inferno
                 warning{
                     "This test set does not currently account for FHIR servers with restrictions on access (like OAuth)."
                 }
+
+            end
+
+
+            test 'Connection in form of FHIR Client' do
+
+                metadata{
+                    id '03'
+                    desc %(
+                        Tests if the inferno client is capable of performing all desired actions
+                    )
+                }
+
+                assert @client.respond_to?(:read), "Client cannot read from FHIR server"
+                assert @client.respond_to?(:search), "Client cannot search FHIR server"
+                assert @client.respond_to?(:detect_version), "Client cannot detect FHIR server version"
+                assert @client.respond_to?(:create), "Client cannot search database"
 
             end
 

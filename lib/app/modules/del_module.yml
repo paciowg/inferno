@@ -9,5 +9,5 @@ test_sets:
     tests: 
       - name: Establish Connection
         sequences:
-          - ConnectionSequence
+          - ValidConnectionSequence
         run_all: true
