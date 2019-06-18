@@ -1,13 +1,13 @@
 name: del
 title: Data Element Library Implementation Guide
-description: Implementation aguide for conforming information in the DEL to FHIR standards
+description: Module to test FHIR server's conformance to the DEL Implementation Guide
 fhir_version: r4
 default_test_set: del_set
 test_sets:
   del_set:
     view: default
     tests: 
-      - name: InitialSet
+      - name: Establish Connection
         sequences:
-          - InitialSequence
-        run_all: false
+          - ConnectionSequence
+        run_all: true
