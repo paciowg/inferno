@@ -10,4 +10,5 @@ test_sets:
       - name: Establish Connection
         sequences:
           - ValidConnectionSequence
+          - RetrieveResourcesSequence
         run_all: true
