@@ -51,9 +51,8 @@ module Inferno
                 }
 
                 #Below Regex is heavily taken from hl7 with some improvements
-                dateTimeRegex = /\A(?:(?!0000)\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2]\d|3[0-1])(T([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?(Z|(\+|-)((0\d|1[0-3]):[0-5]\d|14:00)))?)?)?\z/
                 assert !@cap.date.nil?, "Capability statement date is nil, must have exactly 1 valid date"
-                assert dateTimeRegex.match(@cap.date), "Capability status is " + @cap.date + ", not a valid dateTime (see https://www.hl7.org/fhir/datatypes.html)"
+                assert conforms_to_dateTime_format(@cap.date), "Capability status is " + @cap.date + ", not a valid dateTime (see https://www.hl7.org/fhir/datatypes.html)"
 
             end
 
