@@ -10,5 +10,8 @@ test_sets:
       - name: Establish Connection
         sequences:
           - ValidConnectionSequence
-          - RetrieveResourcesSequence
+        run_all: true
+      - name: Confirm HL7 Resource Requirements
+        sequences:
+          - ConfirmCapabilityStatementSequence
         run_all: true
