@@ -11,7 +11,7 @@ test_sets:
         sequences:
           - ValidConnectionSequence
         run_all: true
-      - name: Confirm HL7 Resource Requirements
+      - name: Confirm HL7 Compliance
         sequences:
           - ConfirmCapabilityStatementSequence
         run_all: true
