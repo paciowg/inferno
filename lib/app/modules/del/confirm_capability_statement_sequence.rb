@@ -37,7 +37,7 @@ module Inferno
 
                 validStatusCodes = ["active", "retired", "draft", "unknown"]
                 assert !@cap.status.nil?, "Capability statement status is nil, must have exactly 1 valid status"
-                assert validStatusCodes.include?(@cap.status), "Capability status is " + @cap.status.inspect + ", not a valid code"
+                assert validStatusCodes.include?(@cap.status), "Capability statement status is " + @cap.status.inspect + ", not a valid code"
 
             end
 
@@ -50,9 +50,8 @@ module Inferno
                     )
                 }
 
-                #Below Regex is heavily taken from hl7 with some improvements
                 assert !@cap.date.nil?, "Capability statement date is nil, must have exactly 1 valid date"
-                assert conforms_to_dateTime_format(@cap.date), "Capability status is " + @cap.date.inspect + ", not a valid dateTime (see https://www.hl7.org/fhir/datatypes.html)"
+                assert conforms_to_dateTime_format(@cap.date), "Capability statement date is " + @cap.date.inspect + ", not a valid dateTime (see https://www.hl7.org/fhir/datatypes.html)"
 
             end
 
@@ -67,7 +66,7 @@ module Inferno
 
                 validKindCodes = ["instance", "capability", "requirements"]
                 assert !@cap.kind.nil?, "Capability statement kind is nil, must have exactly 1 valid kind"
-                assert validKindCodes.include?(@cap.kind), "Capability status is " + @cap.kind.inspect + ", not a valid code"
+                assert validKindCodes.include?(@cap.kind), "Capability statement kind is " + @cap.kind.inspect + ", not a valid code"
 
             end
 
@@ -81,6 +80,34 @@ module Inferno
                 }
 
                 assert @cap.software.nil? || !@cap.software.name.empty?(), "If the capability statement has a software entity, the software entity must have a name"
+
+            end
+
+            test 'Capability Statement has valid implementation (if applicable)' do
+
+                metadata{
+                    id '06'
+                    desc %(
+                        If the capability statement has an implementation section, this checks that it is valid
+                    )
+                }
+
+                assert @cap.implementation.nil? || !@cap.implementation.description.empty?(), "If the capability statement has an implementation entity, it must have a description"
+
+            end
+
+            test 'Capability Statement has valid FHIR Version' do
+
+                metadata{
+                    id '07'
+                    desc %(
+                        Tests if the capability statement has exactly 1, valid FHIR Version
+                    )
+                }
+
+                delVersion = "4.0.0"
+                assert !@cap.fhirVersion.nil?, "Capability statement FHIR version is nil, must have exactly 1 valid fhir version"
+                assert @cap.fhirVersion.eql?(delVersion), "Capability statement version is " + @cap.fhirVersion + ", must be " + delVersion
 
             end
 
