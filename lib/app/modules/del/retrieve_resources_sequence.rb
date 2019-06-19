@@ -20,21 +20,7 @@ module Inferno
                 confState = @client.conformance_statement
 
                 assert !confState.nil?, "No conformance statement retrieved upon request to server"
-
-            end
-
-            test 'Retrieve History' do
-
-                metadata{
-                    id '02'
-                    desc %(
-                        Tests if the FHIR server will return the server history
-                    )
-                }
-
-                hist = @client.history
-
-                assert !hist.nil?, "No history retrieved upon request to server"
+                assert confState.is_a?(FHIR::CapabilityStatement), "Server indicated an error in reading the conformance statement"
 
             end
 
