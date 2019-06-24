@@ -262,8 +262,7 @@ module Inferno
                     )
                 }
 
-                result = @cap.validate
-                binding.pry
+                assert @cap.valid?, "The Capability Statement is invalid and does not fully conform to HL7 requirements"
 
             end
 
