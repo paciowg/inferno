@@ -160,7 +160,7 @@ module Inferno
                                         assert !searchParam.name.empty?, "If CS.rest.resource.searchParam exists, it must have a name"
 
                                         typeOptions = ["number", "date", "string", "token", "reference", "composite", "quantity", "uri", "special"]
-                                        assert !searchParam.type.nil?, "If CS.rest.resource.searchParam exists, it's type cannot be nil " + resource.type.inspect
+                                        assert !searchParam.type.nil?, "If CS.rest.resource.searchParam exists, it's type cannot be nil"
                                         assert typeOptions.include?(searchParam.type), "If CS.rest.resource.searchParam exists, it's type must exist and cannot be " + searchParam.type.inspect
                                     end
                                 end
@@ -209,7 +209,7 @@ module Inferno
                             protocolCodes = ["http", "ftp", "mllp"]
                             endpoints.each do |endpoint|
                                 assert !endpoint.protocol.nil? && !endpoint.protocol.empty?(), "If CS.rest.messaging.endpoint exists, it must have a protocol"
-                                assert protocolCodes.include(endpoint.protocol), "If CS.rest.messaging.endpoint exists, it cannot have " + endpoint.protocol.inspect + " as a protocol"
+                                assert protocolCodes.include?(endpoint.protocol), "If CS.rest.messaging.endpoint exists, it cannot have " + endpoint.protocol.inspect + " as a protocol"
 
                                 assert !endpoint.address.nil? && !endpoint.address.empty?(), "If CS.rest.messaging.endpoint exists, it must have an address"
                             end
@@ -250,6 +250,20 @@ module Inferno
                         assert !document.profile.nil?, "If CS.document is going to exist, it must have a profile"
                     end
                 end
+
+            end
+
+            test 'Validate test' do
+
+                metadata{
+                    id '11'
+                    desc %(
+                        Existing validation method
+                    )
+                }
+
+                result = @cap.validate
+                binding.pry
 
             end
 
