@@ -40,6 +40,22 @@ module Inferno
 
             end
 
+            test 'Questionnaires do not violate HL7 requirements' do
+                
+                metadata{
+                    id '02'
+                    desc %(
+                        Tests if the Questionnaires from the FHIR server are valid according to HL7's definition of a Questionnaire
+                    )
+                }
+
+                @questionnaires.each do |q|
+                    errors = q.validate
+                    assert errors.empty?, errors.to_s
+                end
+
+            end
+
         end
     end 
 end
