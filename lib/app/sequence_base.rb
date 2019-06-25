@@ -770,11 +770,6 @@ module Inferno
         assert(errors.empty?, errors.join("<br/>\n"))
       end
 
-      def conforms_to_dateTime_format(str)
-        dateTimeRegex = /\A(?:(?!0000)\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2]\d|3[0-1])(T([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?(Z|(\+|-)((0\d|1[0-3]):[0-5]\d|14:00)))?)?)?\z/
-        dateTimeRegex.match(str)
-      end
-
     end
 
     Dir.glob(File.join(__dir__, 'modules', '**', '*_sequence.rb')).each{|file| require file}
