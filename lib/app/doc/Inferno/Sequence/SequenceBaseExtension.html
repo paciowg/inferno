@@ -74,6 +74,12 @@
     
     <li class="calls-super" ><a href="#method-c-new">::new</a>
     
+    <li ><a href="#method-i-blank-3F">#blank?</a>
+    
+    <li ><a href="#method-i-check_profiles">#check_profiles</a>
+    
+    <li ><a href="#method-i-coerce_to_a">#coerce_to_a</a>
+    
     <li ><a href="#method-i-conforms_to_dateTime_format">#conforms_to_dateTime_format</a>
     
     <li ><a href="#method-i-get_all_replies">#get_all_replies</a>
@@ -95,7 +101,7 @@
 
   <section class="description">
     
-<p>Added functionality on top of <a href="../Sequence.html"><code>Sequence</code></a> Base</p>
+<p>Adds functionality on top of SequenceBase</p>
 
   </section>
 
@@ -162,6 +168,154 @@
        </header>
 
     
+      <div id="method-i-blank-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">blank?</span><span
+            class="method-args">(param)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns <code>true</code> if <code>param</code> is <code>nil</code> or empty, <code>false</code> otherwise</p>
+          
+          
+
+          
+          <div class="method-source-code" id="blank-3F-source">
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 144</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">blank?</span>(<span class="ruby-identifier">param</span>)
+  <span class="ruby-identifier">param</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">param</span>.<span class="ruby-identifier">empty?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-check_profiles" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">check_profiles</span><span
+            class="method-args">(resources = nil, klasses = nil, profiles = nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Checks validity of profiles by testing all aspects of the server that fall under the intersection of params. (Defining a param will never increase the scope of the check, in fact in most cases it will narrow the scope)</p>
+<ul><li>
+<p><code>resources</code> the array of resources to check a subset of.</p>
+</li><li>
+<p><code>klasses</code> the array of klasses that all checked resources must be a part of.</p>
+</li><li>
+<p><code>profiles</code> the array of profiles that</p>
+</li><li>
+<p>When any of these parameters are nil or empty, it is assumed to apply to the entire set of it&#39;s kind  (i.e. a nil or empty <code>klasses</code> means all available klasses).</p>
+</li></ul>
+
+<p>This means there are 2^3 (8) potential cases for using this method:</p>
+<ol><li>
+<p>When no params are defined (all are nil): this will check every resource in the server, regardless of klass, against all profiles they claim</p>
+</li><li>
+<p>When only <code>profiles</code> is defined: this will check every resource in the server, regardless of klass, against the defined profiles</p>
+</li><li>
+<p>When only <code>klasses</code> is defined: this will check every resource in the server of the specified klasses against all profiles they claim</p>
+</li><li>
+<p>When only <code>klass</code> and <code>profile</code> are defined: this will check every resource in the server of the specified klasses against the defined profiles</p>
+</li><li>
+<p>When only <code>resources</code> is defined: this will check every provided resource, regardless of klass, against any profile they might claim</p>
+</li><li>
+<p>When only <code>resources</code> and <code>profile</code> are defined: this will check every provided resource, regardless of klass, against the defined profiles</p>
+</li><li>
+<p>When only <code>resources</code> and <code>klass</code> and defined: this will check every provided resource of the specified klasses, against any profile they might claim</p>
+</li><li>
+<p>When all params are defined: this will check every provided resource of the specified klasses against the defined profiles</p>
+</li></ol>
+
+<p>Returns array of strings describing each inconsistency between a resource and it&#39;s profile encountered. This means an empty array indicates a fully consistent check.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="check_profiles-source">
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 102</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">check_profiles</span>(<span class="ruby-identifier">resources</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">klasses</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">profiles</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">resources</span> = <span class="ruby-identifier">coerce_to_a</span>(<span class="ruby-identifier">resources</span>)
+  <span class="ruby-identifier">klasses</span> = <span class="ruby-identifier">coerce_to_a</span>(<span class="ruby-identifier">klasses</span>)
+  <span class="ruby-identifier">profiles</span> = <span class="ruby-identifier">coerce_to_a</span>(<span class="ruby-identifier">profiles</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">resources</span>)
+    <span class="ruby-identifier">resources</span> = <span class="ruby-identifier">get_all_resources</span>(<span class="ruby-identifier">klasses</span>)
+  <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">klasses</span>)
+    <span class="ruby-identifier">resources</span>.<span class="ruby-identifier">select!</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span> <span class="ruby-identifier">klasses</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">class</span>) }
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">profiles</span>)
+    <span class="ruby-identifier">resources</span>.<span class="ruby-identifier">select!</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">profiles</span> <span class="ruby-operator">&amp;</span> ((<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">meta</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">meta</span>.<span class="ruby-identifier">profile</span>)) <span class="ruby-operator">?</span> [] <span class="ruby-operator">:</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">meta</span>.<span class="ruby-identifier">profile</span>)) }
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">errors</span> = {}
+  <span class="ruby-identifier">resources</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">errArr</span> = <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">validate</span>.<span class="ruby-identifier">values</span>
+    <span class="ruby-identifier">errors</span>[<span class="ruby-identifier">resource</span>] = <span class="ruby-identifier">errArr</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">errArr</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">errors</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-coerce_to_a" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">coerce_to_a</span><span
+            class="method-args">(param)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns <code>nil</code> if <code>param</code> is falsy, returns <code>param.to_a</code> if possible, otherwise returns <code>param</code> as only element in new <code>Array</code></p>
+          
+          
+
+          
+          <div class="method-source-code" id="coerce_to_a-source">
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 151</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">coerce_to_a</span>(<span class="ruby-identifier">param</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">param</span>
+  <span class="ruby-identifier">param</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-string">&#39;to_a&#39;</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">param</span>.<span class="ruby-identifier">to_a</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Array</span>.<span class="ruby-identifier">[]</span>(<span class="ruby-identifier">param</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
       <div id="method-i-conforms_to_dateTime_format" class="method-detail ">
         
         <div class="method-heading">
@@ -175,13 +329,13 @@
 
         <div class="method-description">
           
-          <p>Returns true if _str conforms to HL7&#39;s dateTime format, false otherwise</p>
+          <p>Returns <code>true</code> if <code>str</code> conforms to HL7&#39;s <code>dateTime</code> format, <code>false</code> otherwise</p>
           
           
 
           
           <div class="method-source-code" id="conforms_to_dateTime_format-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 62</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 136</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">conforms_to_dateTime_format</span>(<span class="ruby-identifier">str</span>)
   <span class="ruby-identifier">dateTimeRegex</span> = <span class="ruby-regexp">/\A(?:(?!0000)\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2]\d|3[0-1])(T([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?(Z|(\+|-)((0\d|1[0-3]):[0-5]\d|14:00)))?)?)?\z/</span>
   <span class="ruby-identifier">dateTimeRegex</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">str</span>)
@@ -200,7 +354,7 @@
         
         <div class="method-heading">
           <span class="method-name">get_all_replies</span><span
-            class="method-args">(klass)</span>
+            class="method-args">(klasses = nil)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -209,22 +363,30 @@
 
         <div class="method-description">
           
-          <p>Retrieves all bundles from server when requesting every resource of type _klass</p>
+          <p>Retrieves all bundles from server when requesting every resource of each type in the <code>klasses</code> array. If <code>klasses</code> is undefined or empty, it defaults to nil, which will return bundles of every resource with no regard for type.</p>
 
-<p>Returns array of every unchanged server response</p>
+<p>Returns <code>[reply, reply, ...]</code> (<code>array</code> of every unchanged server response), <code>nil</code> if no replies</p>
           
           
 
           
           <div class="method-source-code" id="get_all_replies-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 41</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_all_replies</span>(<span class="ruby-identifier">klass</span>)
-  <span class="ruby-identifier">replies</span> = [].<span class="ruby-identifier">push</span>(<span class="ruby-ivar">@client</span>.<span class="ruby-identifier">read_feed</span>(<span class="ruby-identifier">klass</span>))
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">replies</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">replies</span>.<span class="ruby-identifier">empty?</span>
-  <span class="ruby-keyword">while</span> <span class="ruby-operator">!</span><span class="ruby-identifier">replies</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">nil?</span>
-    <span class="ruby-identifier">replies</span>.<span class="ruby-identifier">push</span>(<span class="ruby-ivar">@client</span>.<span class="ruby-identifier">next_page</span>(<span class="ruby-identifier">replies</span>.<span class="ruby-identifier">last</span>))
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 45</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_all_replies</span>(<span class="ruby-identifier">klasses</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">klasses</span> = <span class="ruby-identifier">coerce_to_a</span>(<span class="ruby-identifier">klasses</span>)
+  <span class="ruby-identifier">replies</span> = []
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">klasses</span>)
+    <span class="ruby-identifier">klasses</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">klass</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">replies</span>.<span class="ruby-identifier">push</span>(<span class="ruby-ivar">@client</span>.<span class="ruby-identifier">read_feed</span>(<span class="ruby-identifier">klass</span>))
+      <span class="ruby-keyword">while</span> <span class="ruby-operator">!</span><span class="ruby-identifier">replies</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">nil?</span>
+        <span class="ruby-identifier">replies</span>.<span class="ruby-identifier">push</span>(<span class="ruby-ivar">@client</span>.<span class="ruby-identifier">next_page</span>(<span class="ruby-identifier">replies</span>.<span class="ruby-identifier">last</span>))
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">replies</span>.<span class="ruby-identifier">push</span>(<span class="ruby-ivar">@client</span>.<span class="ruby-identifier">all_history</span>)
   <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">replies</span>.<span class="ruby-identifier">compact</span>
+  <span class="ruby-identifier">replies</span>.<span class="ruby-identifier">compact!</span>
+  <span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">replies</span>) <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">replies</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -240,7 +402,7 @@
         
         <div class="method-heading">
           <span class="method-name">get_all_resources</span><span
-            class="method-args">(klass)</span>
+            class="method-args">(klasses = nil)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -249,17 +411,17 @@
 
         <div class="method-description">
           
-          <p>Calls <a href="SequenceBaseExtension.html#method-i-get_all_replies"><code>get_all_replies</code></a> with klass for server&#39;s responses Filters responses to return an array where every instance of klass from the server is repesented in an element</p>
+          <p>Calls <code>get_all_replies</code> with <code>klasses</code> for server&#39;s responses. Filters responses to return an array where, for every klass indicated in the <code>klasses</code> array, every applicable  resource from the server is repesented in an element. If <code>klasses</code> is undefined or empty, it defaults to nil, which will result in returning every resource available in the server.</p>
 
-<p>Returns [klass] (groomed array of every resource of type klass provided by the server)</p>
+<p>Returns <code>[resource, resource, ...]</code> (groomed array of every resource of any provided klass provided by the server), <code>nil</code> if no replies</p>
           
           
 
           
           <div class="method-source-code" id="get_all_resources-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 24</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_all_resources</span>(<span class="ruby-identifier">klass</span>)
-  <span class="ruby-identifier">replies</span> = <span class="ruby-identifier">get_all_replies</span>(<span class="ruby-identifier">klass</span>)
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_all_resources</span>(<span class="ruby-identifier">klasses</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">replies</span> = <span class="ruby-identifier">get_all_replies</span>(<span class="ruby-identifier">klasses</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">replies</span>
   <span class="ruby-identifier">resources</span> = []
   <span class="ruby-identifier">replies</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reply</span><span class="ruby-operator">|</span>
@@ -291,13 +453,13 @@
 
         <div class="method-description">
           
-          <p>Returns how many resources of type _klass are stored in server</p>
+          <p>Returns how many resources of the type <code>klass</code> are stored in server</p>
           
           
 
           
           <div class="method-source-code" id="how_many-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 54</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 128</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">how_many</span>(<span class="ruby-identifier">klass</span>)
   <span class="ruby-ivar">@client</span>.<span class="ruby-identifier">read_feed</span>(<span class="ruby-identifier">klass</span>).<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">total</span>
 <span class="ruby-keyword">end</span></pre>

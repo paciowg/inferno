@@ -57,10 +57,8 @@ module Inferno
           )
         }
 
-        @questionnaires.each do |q|
-          errors = q.validate
-          assert errors.empty?, errors.to_s
-        end
+        errors = check_profiles(@questionnaires, Array.[](FHIR::Questionnaire))
+        assert errors.empty?, errors.to_s
 
       end
 
