@@ -26,7 +26,7 @@ module Inferno
         @questionnaires = get_all_resources(FHIR::Questionnaire)
 
         @questionnaires.each do |q|
-          assert q.class.eql?(FHIR::Questionnaire), "All questionnaires must actually be instances of FHIR::Questionnaire, not " + q.class.to_s
+          assert q.class.eql?(FHIR::Questionnaire), "All questionnaires must be instances of FHIR::Questionnaire, not " + q.class.to_s
         end
         assert @questionnaires.length == total, "Server claimed to hold " + total.to_s + " questionnaires, actually reads in " + @questionnaires.length.to_s
 
@@ -41,10 +41,8 @@ module Inferno
           )
         }
 
-        @questionnaires.each do |q|
-          errors = q.validate
-          assert errors.empty?, errors.to_s
-        end
+        errors = check_validity(@questionnaires)
+        assert errors.empty?, errors.to_s
 
       end
 
@@ -57,7 +55,8 @@ module Inferno
           )
         }
 
-        errors = check_profiles(@questionnaires, Array.[](FHIR::Questionnaire))
+        standardFormUrl = "https://impact-fhir.mitre.org/r4/StructureDefinition/del-StandardForm"
+        errors = check_profiles(@questionnaires, FHIR::Questionnaire, standardFormUrl)
         assert errors.empty?, errors.to_s
 
       end

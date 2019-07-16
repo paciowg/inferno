@@ -147,5 +147,9 @@ module Inferno
       end
       nil
     end
+
+    def self.get_profile(uri)
+      DEFINITIONS[uri]
+    end
   end
 end

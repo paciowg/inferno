@@ -66,7 +66,7 @@ module Inferno
       #
       # * +resources+ the array of resources to check a subset of.
       # * +klasses+ the array of klasses that all checked resources must be a part of.
-      # * +profiles+ the array of profiles that
+      # * +profiles+ the array of profile urls to check the resources against.
       # * When any of these parameters are nil or empty, it is assumed to apply to the entire set of it's kind 
       #   (i.e. a nil or empty +klasses+ means all available klasses).
       #
@@ -100,6 +100,44 @@ module Inferno
       # This means an empty array indicates a fully consistent check.
 
       def check_profiles(resources = nil, klasses = nil, profiles = nil)
+        resources = get_resource_intersection(resources, klasses, profiles)
+        profiles = coerce_to_a(profiles)
+        profiles.uniq!
+        errors = {}
+        profileSDs = []
+
+        if blank?(profiles)
+          resources.each { |resource| profileSDs.push(resource.meta.profile) }
+          profileSDs.flatten!
+          profileSDs.uniq!
+          profileSDs.collect!{ |profile| Inferno::ValidationUtil.get_profile(profile) }
+        else
+          profileSDs = profiles.collect{ |profile| Inferno::ValidationUtil.get_profile(profile) }
+        end
+        profileSDs.compact!
+        if profiles && profileSDs.length != profiles.length
+          errors["params"] = "Not all profile urls in the profiles param are in Inferno" 
+        end
+
+        profileSDs.each do |sd|
+          errArr = resources.collect{ |resource| sd.validate_resource(resource) }
+          errors[sd.name] = errArr unless blank?(errArr)
+        end
+        errors
+      end
+
+      def check_validity(resources = nil, klasses = nil)
+        resources = get_resource_intersection(resources, klasses)
+        errors = {}
+        resources.each do |resource|
+          errArr = resource.validate.values
+          errors[resource.id] = errArr unless blank?(errArr)
+        end
+        errors
+      end
+
+
+      def get_resource_intersection(resources = nil, klasses = nil, profiles = nil)
         resources = coerce_to_a(resources)
         klasses = coerce_to_a(klasses)
         profiles = coerce_to_a(profiles)
@@ -113,14 +151,8 @@ module Inferno
           resources.select!{ |resource| !blank?(profiles & ((resource.meta.nil? || blank?(resource.meta.profile)) ? [] : resource.meta.profile)) }
         end
 
-        errors = {}
-        resources.each do |resource|
-          errArr = resource.validate.values
-          errors[resource] = errArr unless blank?(errArr)
-        end
-        errors
+        resources
       end
-
 
       ##
       # Returns how many resources of the type +klass+ are stored in server
