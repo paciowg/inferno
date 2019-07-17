@@ -17,5 +17,5 @@ test_sets:
         run_all: true
       - name: Confirm Conformance to DEL IG Profiles
         sequences:
-          - ConfirmAssessmentSequence
+          - ConfirmStandardFormSequence
         run_all: true

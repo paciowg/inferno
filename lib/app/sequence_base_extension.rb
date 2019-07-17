@@ -102,7 +102,7 @@ module Inferno
       def check_profiles(resources = nil, klasses = nil, profiles = nil)
         resources = get_resource_intersection(resources, klasses, profiles)
         profiles = coerce_to_a(profiles)
-        profiles.uniq!
+        profiles.uniq! if profiles
         errors = {}
         profileSDs = []
 
@@ -110,7 +110,7 @@ module Inferno
           resources.each { |resource| profileSDs.push(resource.meta.profile) }
           profileSDs.flatten!
           profileSDs.uniq!
-          profileSDs.collect!{ |profile| Inferno::ValidationUtil.get_profile(profile) }
+          profileSDs.collect!{ |profile| Inferno::ValidationUtil.get_profile(profile) } 
         else
           profileSDs = profiles.collect{ |profile| Inferno::ValidationUtil.get_profile(profile) }
         end
@@ -125,6 +125,7 @@ module Inferno
         end
         errors
       end
+
 
       def check_validity(resources = nil, klasses = nil)
         resources = get_resource_intersection(resources, klasses)
@@ -154,6 +155,7 @@ module Inferno
         resources
       end
 
+
       ##
       # Returns how many resources of the type +klass+ are stored in server
 
@@ -170,6 +172,7 @@ module Inferno
         dateTimeRegex.match(str)
       end
 
+
       ##
       # Returns +true+ if +param+ is +nil+ or empty, +false+ otherwise
 
@@ -177,12 +180,13 @@ module Inferno
         param.nil? || param.empty?
       end
 
+
       ##
-      # Returns +nil+ if +param+ is falsy, returns +param.to_a+ if possible, otherwise returns +param+ as only element in new +Array+
+      # Returns +nil+ if +param+ is falsy, returns +param.clone.to_a+ if possible, otherwise returns +param+ as only element in new +Array+
 
       def coerce_to_a(param)
         return nil unless param
-        param.respond_to?('to_a') ? param.to_a : Array.[](param)
+        param.respond_to?('to_a') ? param.clone.to_a : Array.[](param)
       end
 
     end
