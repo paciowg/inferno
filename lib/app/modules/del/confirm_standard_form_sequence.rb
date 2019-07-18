@@ -58,7 +58,6 @@ module Inferno
         }
 
         sfqs = get_resource_intersection(@questionnaires, FHIR::Questionnaire, @standardFormUrl)
-        puts sfqs.length.to_s + "/" + @questionnaires.length.to_s
         assert @questionnaires.length == sfqs.length, "Only " + sfqs.length.to_s + "/" + @questionnaires.length.to_s + " Questionnaires claim the StandardForm profile"
         
       end

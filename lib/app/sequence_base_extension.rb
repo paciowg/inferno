@@ -61,7 +61,7 @@ module Inferno
 
 
       ##
-      # Checks validity of profiles by testing all aspects of the server that fall under the intersection of params.
+      # Checks validity of profiles by testing all resources against the provided params.
       # (Defining a param will never increase the scope of the check, in fact in most cases it will narrow the scope)
       #
       # * +resources+ the array of resources to check a subset of.
@@ -120,12 +120,39 @@ module Inferno
         end
 
         profileSDs.each do |sd|
-          errArr = resources.collect{ |resource| sd.validate_resource(resource) }
+          errArr = resources.collect{ |resource| {resource.id.to_s => sd.validate_resource(resource)} }
+          errArr = errArr.delete_if{ |res, err|  blank?(err) }
           errors[sd.name] = errArr unless blank?(errArr)
         end
         errors
       end
 
+
+      ##
+      # Checks validity of resources by checking if they conform to their definitions from HL7
+      # (Defining a param will never increase the scope of the check, in fact in most cases it will narrow the scope)
+      #
+      # * +resources+ the array of resources to check a subset of.
+      # * +klasses+ the array of klasses that all checked resources must be a part of.
+      # * When either of these parameters are nil or empty, it is assumed to apply to the entire set of it's kind 
+      #   (i.e. a nil or empty +klasses+ means all available klasses).
+      # 
+      # This means there are 2^2 (4) potential cases for using this method:
+      #
+      # 1. When no params are defined (all are nil): this will check the validity of every resource
+      #    in the server, regardless of klass
+      #
+      # 2. When only +klasses+ is defined: this will check the validity of every resource
+      #    in the server of the specified klasses
+      #
+      # 3. When only +resources+ is defined: this will check the validity of every provided resource,
+      #    regardless of klass
+      #
+      # 4. When all params are defined: this will check the validity of every provided resource
+      #    of the specified klasses
+      #
+      # Returns array of strings describing each inconsistency between a resource and its HL7 definition.
+      # This means an empty array indicates a fully consistent check.
 
       def check_validity(resources = nil, klasses = nil)
         resources = get_resource_intersection(resources, klasses)
@@ -137,6 +164,44 @@ module Inferno
         errors
       end
 
+
+      ##
+      # Retrieve set of resources based on the intersection of the params.
+      # (Defining a param will never increase the resource set, in fact in most cases it will narrow it)
+      #
+      # * +resources+ the array of resources to start with.
+      # * +klasses+ the array of klasses that all retrieved resources must be an instance of.
+      # * +profiles+ the array of profile urls that all retrieved resources must claim in their metadata.
+      # * When any of these parameters are nil or empty, it is assumed that all associated options are acceptable. 
+      #   (i.e. a nil or empty +klasses+ means all possible klasses).
+      #
+      # This means there are 2^3 (8) potential cases for using this method:
+      # 
+      # 1. When no params are defined (all are nil): this will retrieve every resource
+      #    from the server, regardless of klass and profile
+      #
+      # 2. When only +profiles+ is defined: this will retrieve every resource
+      #    from the server, regardless of klass, that claims the identified profiles
+      #
+      # 3. When only +klasses+ is defined: this will retrieve every resource
+      #    from the server of the specified klasses, regardless of the profile
+      #
+      # 4. When only +klass+ and +profile+ are defined: this will retrieve every resource
+      #    from the server of the specified klasses that claim the identified profiles
+      #
+      # 5. When only +resources+ is defined: this will return every provided resource,
+      #    regardless of klass and profile (so it will just return +resources+ unmodified)
+      #
+      # 6. When only +resources+ and +profile+ are defined: this will return every provided resource,
+      #    regardless of klass, that claims the identified profiles
+      #
+      # 7. When only +resources+ and +klass+ and defined: this will return every provided resource
+      #    of the specified klasses, regardless of the profile
+      #
+      # 8. When all params are defined: this will return every provided resource of the specified klasses
+      #    that claims the identified resource
+      #
+      # Returns an array of the requested resources, derived from the intersection of the three params.
 
       def get_resource_intersection(resources = nil, klasses = nil, profiles = nil)
         resources = coerce_to_a(resources)
@@ -182,7 +247,7 @@ module Inferno
 
 
       ##
-      # Returns +nil+ if +param+ is falsy, returns +param.clone.to_a+ if possible, otherwise returns +param+ as only element in new +Array+
+      # Returns +nil+ if +param+ is falsy. If +param+ is truthy, returns +param.clone.to_a+ if possible, otherwise returns +param+ as the only element in a new +Array+
 
       def coerce_to_a(param)
         return nil unless param
