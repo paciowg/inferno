@@ -1,4 +1,5 @@
 require_relative 'sequence_base'
+require 'json'
 
 module Inferno
   module Sequence
@@ -228,7 +229,7 @@ module Inferno
       # Returns how many resources of the type +klass+ are stored in server
 
       def how_many(klass)
-        @client.read_feed(klass).resource.total
+        JSON.parse(@client.raw_read(resource: klass, summary: "count").response[:body])["total"].to_i
       end
 
 
