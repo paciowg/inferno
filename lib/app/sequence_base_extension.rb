@@ -65,14 +65,14 @@ module Inferno
       # (Defining a param will never increase the scope of the check, in fact in most cases it will narrow the scope)
       #
       # * +resources+ the array of resources to check a subset of.
-      # * +klasses+ the array of klasses that all checked resources must be a part of.
+      # * +klasses+ the array of klasses that all checked resources must be instances of.
       # * +profiles+ the array of profile urls to check the resources against.
       # * When any of these parameters are nil or empty, it is assumed to apply to the entire set of it's kind 
       #   (i.e. a nil or empty +klasses+ means all available klasses).
       #
       # This means there are 2^3 (8) potential cases for using this method:
       # 
-      # 1. When no params are defined (all are nil): this will check every resource
+      # 1. When no params are defined (all are  or empty): this will check every resource
       #    in the server, regardless of klass, against all profiles they claim
       #
       # 2. When only +profiles+ is defined: this will check every resource
@@ -139,7 +139,7 @@ module Inferno
       # 
       # This means there are 2^2 (4) potential cases for using this method:
       #
-      # 1. When no params are defined (all are nil): this will check the validity of every resource
+      # 1. When no params are defined (all are nil or empty): this will check the validity of every resource
       #    in the server, regardless of klass
       #
       # 2. When only +klasses+ is defined: this will check the validity of every resource
@@ -177,7 +177,7 @@ module Inferno
       #
       # This means there are 2^3 (8) potential cases for using this method:
       # 
-      # 1. When no params are defined (all are nil): this will retrieve every resource
+      # 1. When no params are defined (all are nil or empty): this will retrieve every resource
       #    from the server, regardless of klass and profile
       #
       # 2. When only +profiles+ is defined: this will retrieve every resource
