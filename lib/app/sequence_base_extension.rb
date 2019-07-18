@@ -120,8 +120,11 @@ module Inferno
         end
 
         profileSDs.each do |sd|
-          errArr = resources.collect{ |resource| {resource.id.to_s => sd.validate_resource(resource)} }
-          errArr = errArr.delete_if{ |res, err|  blank?(err) }
+          errArr = resources.collect{ |resource| 
+            err = sd.validate_resource(resource)
+            blank?(err) ? nil : {resource.id.to_s => err}
+          }
+          errArr.compact!
           errors[sd.name] = errArr unless blank?(errArr)
         end
         errors
