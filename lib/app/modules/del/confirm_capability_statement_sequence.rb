@@ -263,8 +263,9 @@ module Inferno
             Existing validation method
           )
         }
-
-        assert @cap.valid?, "The Capability Statement is invalid and does not fully conform to HL7 requirements"
+        
+        err = @cap.validate
+        assert err.empty?, err.to_s
 
       end
 
