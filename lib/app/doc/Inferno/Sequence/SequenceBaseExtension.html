@@ -150,7 +150,7 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 14</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 15</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">instance</span>, <span class="ruby-identifier">client</span>, <span class="ruby-identifier">disable_tls_tests</span> = <span class="ruby-keyword">false</span>, <span class="ruby-identifier">sequence_result</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">metadata_only</span> = <span class="ruby-keyword">false</span>)
   <span class="ruby-keyword">super</span>(<span class="ruby-identifier">instance</span>, <span class="ruby-identifier">client</span>, <span class="ruby-identifier">disable_tls_tests</span>, <span class="ruby-identifier">sequence_result</span>, <span class="ruby-identifier">metadata_only</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -191,7 +191,7 @@
 
           
           <div class="method-source-code" id="blank-3F-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 244</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 248</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">blank?</span>(<span class="ruby-identifier">param</span>)
   <span class="ruby-identifier">param</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">param</span>.<span class="ruby-identifier">empty?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -222,7 +222,7 @@
 <ul><li>
 <p><code>resources</code> the array of resources to check a subset of.</p>
 </li><li>
-<p><code>klasses</code> the array of klasses that all checked resources must be a part of.</p>
+<p><code>klasses</code> the array of klasses that all checked resources must be instances of.</p>
 </li><li>
 <p><code>profiles</code> the array of profile urls to check the resources against.</p>
 </li><li>
@@ -231,7 +231,7 @@
 
 <p>This means there are 2^3 (8) potential cases for using this method:</p>
 <ol><li>
-<p>When no params are defined (all are nil): this will check every resource in the server, regardless of klass, against all profiles they claim</p>
+<p>When no params are defined (all are  or empty): this will check every resource in the server, regardless of klass, against all profiles they claim</p>
 </li><li>
 <p>When only <code>profiles</code> is defined: this will check every resource in the server, regardless of klass, against the defined profiles</p>
 </li><li>
@@ -254,7 +254,7 @@
 
           
           <div class="method-source-code" id="check_profiles-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 102</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 103</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">check_profiles</span>(<span class="ruby-identifier">resources</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">klasses</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">profiles</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">resources</span> = <span class="ruby-identifier">get_resource_intersection</span>(<span class="ruby-identifier">resources</span>, <span class="ruby-identifier">klasses</span>, <span class="ruby-identifier">profiles</span>)
   <span class="ruby-identifier">profiles</span> = <span class="ruby-identifier">coerce_to_a</span>(<span class="ruby-identifier">profiles</span>)
@@ -276,8 +276,11 @@
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">profileSDs</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sd</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">errArr</span> = <span class="ruby-identifier">resources</span>.<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span> {<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">sd</span>.<span class="ruby-identifier">validate_resource</span>(<span class="ruby-identifier">resource</span>)} }
-    <span class="ruby-identifier">errArr</span> = <span class="ruby-identifier">errArr</span>.<span class="ruby-identifier">delete_if</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">res</span>, <span class="ruby-identifier">err</span><span class="ruby-operator">|</span>  <span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">err</span>) }
+    <span class="ruby-identifier">errArr</span> = <span class="ruby-identifier">resources</span>.<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span> 
+      <span class="ruby-identifier">err</span> = <span class="ruby-identifier">sd</span>.<span class="ruby-identifier">validate_resource</span>(<span class="ruby-identifier">resource</span>)
+      <span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">err</span>) <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span> {<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-identifier">err</span>}
+    }
+    <span class="ruby-identifier">errArr</span>.<span class="ruby-identifier">compact!</span>
     <span class="ruby-identifier">errors</span>[<span class="ruby-identifier">sd</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">errArr</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">blank?</span>(<span class="ruby-identifier">errArr</span>)
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">errors</span>
@@ -316,7 +319,7 @@
 
 <p>This means there are 2^2 (4) potential cases for using this method:</p>
 <ol><li>
-<p>When no params are defined (all are nil): this will check the validity of every resource in the server, regardless of klass</p>
+<p>When no params are defined (all are nil or empty): this will check the validity of every resource in the server, regardless of klass</p>
 </li><li>
 <p>When only <code>klasses</code> is defined: this will check the validity of every resource in the server of the specified klasses</p>
 </li><li>
@@ -331,7 +334,7 @@
 
           
           <div class="method-source-code" id="check_validity-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 157</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 161</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">check_validity</span>(<span class="ruby-identifier">resources</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">klasses</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">resources</span> = <span class="ruby-identifier">get_resource_intersection</span>(<span class="ruby-identifier">resources</span>, <span class="ruby-identifier">klasses</span>)
   <span class="ruby-identifier">errors</span> = {}
@@ -370,7 +373,7 @@
 
           
           <div class="method-source-code" id="coerce_to_a-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 252</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 256</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">coerce_to_a</span>(<span class="ruby-identifier">param</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">param</span>
   <span class="ruby-identifier">param</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-string">&#39;to_a&#39;</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">param</span>.<span class="ruby-identifier">clone</span>.<span class="ruby-identifier">to_a</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Array</span>.<span class="ruby-identifier">[]</span>(<span class="ruby-identifier">param</span>)
@@ -404,7 +407,7 @@
 
           
           <div class="method-source-code" id="conforms_to_dateTime_format-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 235</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 239</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">conforms_to_dateTime_format</span>(<span class="ruby-identifier">str</span>)
   <span class="ruby-identifier">dateTimeRegex</span> = <span class="ruby-regexp">/\A(?:(?!0000)\d{4})(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2]\d|3[0-1])(T([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?(Z|(\+|-)((0\d|1[0-3]):[0-5]\d|14:00)))?)?)?\z/</span>
   <span class="ruby-identifier">dateTimeRegex</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">str</span>)
@@ -440,7 +443,7 @@
 
           
           <div class="method-source-code" id="get_all_replies-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 45</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_all_replies</span>(<span class="ruby-identifier">klasses</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">klasses</span> = <span class="ruby-identifier">coerce_to_a</span>(<span class="ruby-identifier">klasses</span>)
   <span class="ruby-identifier">replies</span> = []
@@ -488,7 +491,7 @@
 
           
           <div class="method-source-code" id="get_all_resources-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 27</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_all_resources</span>(<span class="ruby-identifier">klasses</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">replies</span> = <span class="ruby-identifier">get_all_replies</span>(<span class="ruby-identifier">klasses</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">replies</span>
@@ -535,7 +538,7 @@
 
 <p>This means there are 2^3 (8) potential cases for using this method:</p>
 <ol><li>
-<p>When no params are defined (all are nil): this will retrieve every resource from the server, regardless of klass and profile</p>
+<p>When no params are defined (all are nil or empty): this will retrieve every resource from the server, regardless of klass and profile</p>
 </li><li>
 <p>When only <code>profiles</code> is defined: this will retrieve every resource from the server, regardless of klass, that claims the identified profiles</p>
 </li><li>
@@ -558,7 +561,7 @@
 
           
           <div class="method-source-code" id="get_resource_intersection-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 206</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 210</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">get_resource_intersection</span>(<span class="ruby-identifier">resources</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">klasses</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">profiles</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">resources</span> = <span class="ruby-identifier">coerce_to_a</span>(<span class="ruby-identifier">resources</span>)
   <span class="ruby-identifier">klasses</span> = <span class="ruby-identifier">coerce_to_a</span>(<span class="ruby-identifier">klasses</span>)
@@ -604,9 +607,9 @@
 
           
           <div class="method-source-code" id="how_many-source">
-            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 227</span>
+            <pre><span class="ruby-comment"># File sequence_base_extension.rb, line 231</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">how_many</span>(<span class="ruby-identifier">klass</span>)
-  <span class="ruby-ivar">@client</span>.<span class="ruby-identifier">read_feed</span>(<span class="ruby-identifier">klass</span>).<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">total</span>
+  <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-ivar">@client</span>.<span class="ruby-identifier">raw_read</span>(<span class="ruby-value">resource:</span> <span class="ruby-identifier">klass</span>, <span class="ruby-value">summary:</span> <span class="ruby-string">&quot;count&quot;</span>).<span class="ruby-identifier">response</span>[<span class="ruby-value">:body</span>])[<span class="ruby-string">&quot;total&quot;</span>].<span class="ruby-identifier">to_i</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
