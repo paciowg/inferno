@@ -19,7 +19,7 @@ module Inferno
         metadata{
           id '01'
           desc %(
-            Tests if the FHIR server will return every Questionnaire the bundles say it will
+            Tests if the FHIR server will return every Questionnaire the server says it stores
           )
         }
 

@@ -19,7 +19,7 @@ module Inferno
         metadata{
           id '01'
           desc %(
-            Tests if the FHIR server will return every QuestionnaireResponse the bundles say it will
+            Tests if the FHIR server will return every QuestionnaireResponse the server says it stores
           )
         }
 
@@ -27,8 +27,8 @@ module Inferno
         @total = how_many(FHIR::QuestionnaireResponse)
         @responses = get_all_resources(FHIR::QuestionnaireResponse)
 
-        @responses.each do |q|
-          assert q.class.eql?(FHIR::QuestionnaireResponse), "All questionnaires must be instances of FHIR::Questionnaire, not " + q.class.to_s
+        @responses.each do |r|
+          assert r.class.eql?(FHIR::QuestionnaireResponse), "All questionnaires must be instances of FHIR::Questionnaire, not " + r.class.to_s
         end
         assert @responses.length == @total, "Server claimed to hold " + @total.to_s + " questionnaires, actually reads in " + @responses.length.to_s
 

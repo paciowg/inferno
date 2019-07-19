@@ -19,4 +19,5 @@ test_sets:
         sequences:
           - ConfirmAssessmentSequence
           - ConfirmStandardFormSequence
+          - ConfirmStandardFormLibrarySequence
         run_all: true
