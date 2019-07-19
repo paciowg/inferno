@@ -57,7 +57,7 @@ module Inferno
           )
         }
 
-        sfls = get_resource_intersection(@libraries, FHIR::QuestionnaireResponse, @slfUrl)
+        sfls = get_resource_intersection(@libraries, FHIR::QuestionnaireResponse, @sflUrl)
         assert @libraries.length == sfls.length, "Only " + sfls.length.to_s + "/" + @libraries.length.to_s + " Libraries claim the StandardFormLibrary profile"
         
       end
