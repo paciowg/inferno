@@ -18,7 +18,7 @@ module Inferno
         }
         
         urlRegex = /\Ahttps?:\/\/(www\.)?[-a-zA-Z0-9]{2,256}(\.[a-zA-Z]{2,256})+(\/[^\/]+)*\/?\z/
-        assert urlRegex.match?(@instance.url), "URL is not viable, check that you input it correctly"
+        assert urlRegex.match?(@instance.url), "Given URL is not viable (potentially missing http:// or https://)"
 
       end
 
