@@ -72,7 +72,7 @@ module Inferno
         }
 
         errors = check_profiles(@measures, FHIR::Measure, @sfqUrl)
-        assert errors.empty?, error.to_s
+        assert errors.empty?, errors.to_s
 
       end
 
