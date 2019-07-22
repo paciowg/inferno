@@ -42,6 +42,7 @@ badge_text: Community
 
 # module options: one or more must be set.  The first option in the list will be checked by default
 modules:
+  - del
   - onc
   - onc_r4
   - smart
@@ -50,6 +51,14 @@ modules:
 
 # preset fhir servers: optional. Minimally requires name, uri, module, optional inferno_uri, client_id, client_secret, scopes, instructions link
 presets:
+  impact:
+    name: Impact FHIR
+    uri: https://impact-fhir.mitre.org/r4/
+    module: del
+    inferno_uri: http://localhost:4567
+    client_id: n/a
+    client_secret: n/a
+    instructions: https://i.gifer.com/7o65.gif
   site_healthit_gov: 
     name: SITE DSTU2 FHIR Sandbox
     uri: https://fhir.sitenv.org/secure/fhir

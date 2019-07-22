@@ -1,0 +1,24 @@
+name: del
+title: Data Element Library Implementation Guide
+description: Module to test FHIR server's conformance to the DEL Implementation Guide
+fhir_version: r4
+default_test_set: del_set
+test_sets:
+  del_set:
+    view: default
+    tests: 
+      - name: Establish Connection
+        sequences:
+          - ValidConnectionSequence
+        run_all: true
+      - name: Confirm Minimum HL7 Compliance
+        sequences:
+          - ConfirmCapabilityStatementSequence
+        run_all: true
+      - name: Confirm Conformance to DEL IG Profiles
+        sequences:
+          - ConfirmAssessmentSequence
+          - ConfirmStandardFormSequence
+          - ConfirmStandardFormLibrarySequence
+          - ConfirmStandardFormQuestionSequence
+        run_all: true

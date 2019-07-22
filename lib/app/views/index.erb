@@ -31,7 +31,7 @@
       <div class="form-group">
         <label for="fhir_server" class="endpoint-label sr-only">FHIR Server Endpoint</label>
         <div class="input-group">
-          <input type="url" required class="form-control form-control-lg" name="fhir_server" placeholder="http://your-fhir-server.org" aria-label="Create App">
+          <input type="url" required class="form-control form-control-lg" name="fhir_server" value="https://impact-fhir.mitre.org/r4" aria-label="Create App">
           <div class="input-group-btn">
             <button class="btn btn-lg btn-secondary" type="submit">Begin</button>
           </div>
@@ -44,10 +44,10 @@
         <div class="form-group">
           <span class="oi oi-lightbulb"></span> Optionally, choose a preset vendor configuration to test:
           <select class="custom-select custom-select-lg" name="preset" style="margin-left: 10px;" id="preset-select">
-            <option value="" data-module_names=<%=module_names.join(',')%> data-all=<%=presets.to_json.tr(' ', '_')%> data-selected="">None</option>
             <% presets.each do |preset| %>
               <option value="" data-module_names=<%=module_names.join(',')%> data-all=<%=presets.to_json.tr(' ', '_')%> data-selected=<%=preset.at(0)%>><%=preset.at(1)["name"]%></option>
             <% end %>
+            <option value="" data-module_names=<%=module_names.join(',')%> data-all=<%=presets.to_json.tr(' ', '_')%> data-selected="">None</option>
             <input type="hidden" name="preset" id="preset" value="" />
           </select>
           <a id="instructions-link" href="" target="_blank" style="display:none">Click here for instructions.</a>
