@@ -5,7 +5,7 @@ module Inferno
     class ConfirmLibrarySequence < SequenceBaseExtension
 
       title 'Confirm Library Sequence'
-      description "Verify that the server's Library conform to HL7 standards"
+      description "Verify that the server's Libraries conform to HL7 standards"
       test_id_prefix 'cls'
 
       requires :url
