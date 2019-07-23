@@ -24,7 +24,7 @@ module Inferno
 
         total = how_many(FHIR::Measure)        
         @sfqUrl = "https://impact-fhir.mitre.org/r4/StructureDefinition/del-StandardFormQuestion"
-        @sfqs = get_resource_intersection(nil, FHIR::Measure, @sflUrl)
+        @sfqs = get_resource_intersection(nil, FHIR::Measure, @sfqUrl)
         assert total == @sfqs.length, "Only " + @sfqs.length.inspect + "/" + total.inspect + " Measures claim the StandardFormQuestion profile"
         
       end
