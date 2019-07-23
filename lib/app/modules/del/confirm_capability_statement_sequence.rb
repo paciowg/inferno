@@ -4,9 +4,9 @@ module Inferno
   module Sequence
     class ConfirmCapabilityStatementSequence < SequenceBaseExtension
 
-      title 'Confirm Capability Statement Sequence'
+      title 'Confirm CapabilityStatement Sequence'
       description "Verify that the server's capability statement conforms to HL7 standards"
-      test_id_prefix 'ccss'
+      test_id_prefix 'ccass'
 
       requires :url
 
