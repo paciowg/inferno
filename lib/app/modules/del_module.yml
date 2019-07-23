@@ -16,6 +16,7 @@ test_sets:
           - ConfirmCapabilityStatementSequence
           - ConfirmQuestionnaireSequence
           - ConfirmQuestionnaireResponseSequence
+          - ConfirmLibrarySequence
         run_all: true
       - name: Confirm Conformance to DEL IG Profiles
         sequences:
