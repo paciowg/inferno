@@ -5,7 +5,7 @@ module Inferno
     class ConfirmStandardFormLibrarySequence < SequenceBaseExtension
 
       title 'Confirm StandardFormLibrary Sequence'
-      description "Verify that the server's Libraries conform to HL7 standards and the StandardFormLibrary profile"
+      description "Verify that the server's Libraries conform to the StandardFormLibrary profile"
       test_id_prefix 'csfls'
 
       requires :url
