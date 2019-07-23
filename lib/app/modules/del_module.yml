@@ -20,6 +20,7 @@ test_sets:
           - ConfirmMeasureSequence
           - ConfirmStructureDefinitionSequence
           - ConfirmCodeSystemSequence
+          - ConfirmValueSetSequence
         run_all: true
       - name: Confirm Conformance to DEL IG Profiles
         sequences:
