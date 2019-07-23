@@ -28,9 +28,9 @@ module Inferno
         @responses = get_all_resources(FHIR::QuestionnaireResponse)
 
         @responses.each do |r|
-          assert r.class.eql?(FHIR::QuestionnaireResponse), "All questionnaires must be instances of FHIR::Questionnaire, not " + r.class.to_s
+          assert r.class.eql?(FHIR::QuestionnaireResponse), "All QuestionnaireResponses must be instances of FHIR::QuestionnaireResponse, not " + r.class.to_s
         end
-        assert @responses.length == @total, "Server claimed to hold " + @total.to_s + " questionnaires, actually reads in " + @responses.length.to_s
+        assert @responses.length == @total, "Server claimed to hold " + @total.to_s + " QuestionnaireResponses, actually reads in " + @responses.length.to_s
 
       end
 

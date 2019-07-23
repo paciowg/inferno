@@ -5,7 +5,7 @@ module Inferno
     class ConfirmStandardFormSequence < SequenceBaseExtension
 
       title 'Confirm StandardForm Sequence'
-      description "Verify that the server's questionnaires conform to HL7 standards and the StandardForm profile"
+      description "Verify that the server's Questionnaires conform to HL7 standards and the StandardForm profile"
       test_id_prefix 'csfs'
 
       requires :url

@@ -11,9 +11,10 @@ test_sets:
         sequences:
           - ValidConnectionSequence
         run_all: true
-      - name: Confirm Minimum HL7 Compliance
+      - name: Confirm HL7 Compliance
         sequences:
           - ConfirmCapabilityStatementSequence
+          - ConfirmQuestionnaireSequence
         run_all: true
       - name: Confirm Conformance to DEL IG Profiles
         sequences:
