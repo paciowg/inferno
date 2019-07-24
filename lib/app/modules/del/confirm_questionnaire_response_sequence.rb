@@ -4,7 +4,7 @@ module Inferno
   module Sequence
     class ConfirmQuestionnaireResponseSequence < SequenceBaseExtension
 
-      title 'Confirm QuestionnaireRespoonse Sequence'
+      title 'Confirm QuestionnaireResponse Sequence'
       description "Verify that the server's QuestionnaireResponses conform to HL7 standards"
       test_id_prefix 'cqrs'
 
