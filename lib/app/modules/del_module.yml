@@ -15,17 +15,17 @@ test_sets:
         sequences:
           - ConfirmCapabilityStatementSequence
           - ConfirmQuestionnaireSequence
-          - ConfirmQuestionnaireResponseSequence
+          # - ConfirmQuestionnaireResponseSequence
           - ConfirmLibrarySequence
           - ConfirmMeasureSequence
           - ConfirmStructureDefinitionSequence
-          - ConfirmCodeSystemSequence
-          - ConfirmValueSetSequence
+          # - ConfirmCodeSystemSequence
+          # - ConfirmValueSetSequence
         run_all: true
       - name: Confirm Conformance to DEL IG Profiles
         sequences:
           - ConfirmStandardFormSequence
-          - ConfirmAssessmentSequence
+          # - ConfirmAssessmentSequence
           - ConfirmStandardFormLibrarySequence
           - ConfirmStandardFormQuestionSequence
         run_all: true
