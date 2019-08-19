@@ -22,11 +22,24 @@ module Inferno
 
       end
 
+      test 'Correct URL' do
+
+        metadata{
+          id '02'
+          desc %(
+            Tests that the provided URL is the public facing DEL FHIR API (https://api.logicahealth.org/PACIO/open)
+          )
+        }
+
+        urlExactRegex = /\Ahttps?:\/\/api\.logicahealth\.org\/PACIO\/open\/?\z/
+        assert urlExactRegex.match?(@instance.url), @instance.url + " does not match https://api.logicahealth.org/PACIO/open"
+
+      end
 
       test 'Client Initialized' do
 
         metadata{
-          id '02'
+          id '03'
           desc %(
             Tests if inferno was able to initialize a client
           )
@@ -44,7 +57,7 @@ module Inferno
       test 'Connection in form of FHIR Client' do
 
         metadata{
-          id '03'
+          id '04'
           desc %(
             Tests if the inferno client is capable of performing all desired actions
           )
