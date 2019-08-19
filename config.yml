@@ -53,7 +53,7 @@ modules:
 presets:
   impact:
     name: Impact FHIR
-    uri: https://impact-fhir.mitre.org/r4/
+    uri: https://api.logicahealth.org/PACIO/open
     module: del
     inferno_uri: http://localhost:4567
     client_id: n/a
