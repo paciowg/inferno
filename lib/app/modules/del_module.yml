@@ -15,17 +15,21 @@ test_sets:
         sequences:
           - ConfirmCapabilityStatementSequence
           - ConfirmQuestionnaireSequence
-          # - ConfirmQuestionnaireResponseSequence
+          # Not represented in server - ConfirmQuestionnaireResponseSequence
           - ConfirmLibrarySequence
           - ConfirmMeasureSequence
           - ConfirmStructureDefinitionSequence
-          # - ConfirmCodeSystemSequence
-          # - ConfirmValueSetSequence
+          # Not represented in server - ConfirmCodeSystemSequence
+          # Not represented in server - ConfirmValueSetSequence
         run_all: true
       - name: Confirm Conformance to DEL IG Profiles
         sequences:
           - ConfirmStandardFormSequence
-          # - ConfirmAssessmentSequence
+          # Not represented in server - ConfirmAssessmentSequence
           - ConfirmStandardFormLibrarySequence
           - ConfirmStandardFormQuestionSequence
+        run_all: true
+      - name: Ensure Server Achieves Functionality Goals
+        sequences:
+          - ConfirmQuestionnaireTypeConsistencySequence
         run_all: true
