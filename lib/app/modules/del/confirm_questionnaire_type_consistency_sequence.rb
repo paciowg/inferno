@@ -12,7 +12,7 @@ module Inferno
 
       @questionnaires = nil
 
-      test 'All Questionnaire Types Consistent with Potential Answers' do
+      test 'All Questionnaire types consistent with potential answers' do
       
         metadata{
           id '01'
